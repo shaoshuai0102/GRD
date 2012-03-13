@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>GRD Options</title>
+        <style>
+            table tr td {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+<body>
+    <button>Add</button>
+    <table id="host-table">
+    </table>
+    <button>Save All</button>
+</body>
+<script type="text/javascript">
+    //localStorage['hosts'] = JSON.stringify(['douban.com']);
+    function show(item) {
+        if (Array.isArray(item)) {
+            item.forEach(function(v, i) {
+                console.log(v, i);
+                show(v);
+            });
+            return;
+        }
+        var tr = document.createElement('tr'),
+            td1 = document.createElement('td'),
+            td2 = document.createElement('td'),
+            input = document.createElement('input'),
+            btn = document.createElement('button');
+
+        btn.innerHTML = "Delete";
+        td1.appendChild(input);
+        td2.appendChild(btn);
+        input.value = item;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        document.getElementById('host-table').appendChild(tr);
+    }
+
+    var hosts = JSON.parse(localStorage['hosts']);
+    show(hosts);
+</script>
+</html>

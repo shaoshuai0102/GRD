@@ -1,0 +1,25 @@
+<script>
+    chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
+        var arr = [
+            'renren.com',
+            'douban.com',
+            't.qq.com',
+            'weibo.com',
+            'taobao.com',
+            'vancl.com',
+            '360buy.com',
+            'amazon.cn',
+            'twitter.com',
+            'qzone.qq.com'
+        ];
+        var url = details.url,
+            tabId = details.tabId;
+
+        arr.forEach(function(host, i) {
+            if (url.indexOf(host) > -1) {
+                chrome.tabs.update(tabId, {url:'warn.html'});
+            }
+        });
+    });
+
+</script>
