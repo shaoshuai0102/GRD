@@ -16,8 +16,12 @@
             tabId = details.tabId;
 
         arr.forEach(function(host, i) {
-            if (url.indexOf(host) > -1) {
-                chrome.tabs.update(tabId, {url:'warn.html'});
+            var h = (new Date()).getHours();
+            //9:00 - 12:00 and 13:00 - 18:00
+            if ((h >= 9 && h < 12) || (h >= 13 && h < 18)) {
+                if (url.indexOf(host) > -1) {
+                    chrome.tabs.update(tabId, {url:'warn.html'});
+                }
             }
         });
     });
