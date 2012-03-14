@@ -1,45 +1,120 @@
 <html>
     <head>
         <title>GRD Options</title>
+        <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
         <style>
-            table tr td {
-                margin: 0;
-                padding: 0;
+            body {
+                padding: 30px;
             }
         </style>
     </head>
-<body>
-    <button>Add</button>
-    <table id="host-table">
-    </table>
-    <button>Save All</button>
-</body>
-<script type="text/javascript">
-    //localStorage['hosts'] = JSON.stringify(['douban.com']);
-    function show(item) {
-        if (Array.isArray(item)) {
-            item.forEach(function(v, i) {
-                console.log(v, i);
-                show(v);
-            });
-            return;
-        }
-        var tr = document.createElement('tr'),
-            td1 = document.createElement('td'),
-            td2 = document.createElement('td'),
-            input = document.createElement('input'),
-            btn = document.createElement('button');
+    <body>
+        <div class="span8">
+            <div>
+                <button class="btn" id="add-btn" onclick="showAddForm()">Add</button>
+            </div>
 
-        btn.innerHTML = "Delete";
-        td1.appendChild(input);
-        td2.appendChild(btn);
-        input.value = item;
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        document.getElementById('host-table').appendChild(tr);
+            <form class="well form-inline" style="display:none;margin-top: 15px;" id="add-form">
+                <input type="text" id="host-input" placeholder="Host" style="height:28px;">
+                <button type="button" class="btn btn-primary" onclick="saveBtnHandler()">Save</button>
+                <button type="button" class="btn" onclick="hideAddForm()">Cancel</button>
+            </form>
+
+            <table class="table" style="margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th>Host</td>
+                        <th>Operations</td>
+                    </tr>
+                </thead>
+                <tbody id="host-table">
+                </tbody>
+            </table>
+        </div>
+    </body>
+
+<script type="text/javascript">
+var hosts = null;
+
+function showAddForm() {
+    document.getElementById('add-form').style.display = 'block';
+}
+
+function hideAddForm() {
+    document.getElementById('add-form').style.display = 'none';
+}
+
+function saveHost(h, callback) {
+    if (!hosts) {
+        hosts = [];
     }
 
-    var hosts = JSON.parse(localStorage['hosts']);
+    var bExisted = hosts.some(function(v) {
+        return v == h;
+    })
+
+    if (bExisted) {
+        callback(false, "Save failed! Host existed!");
+    } else {
+        hosts.push(h);
+        localStorage['hosts'] = JSON.stringify(hosts);
+        callback(true, "Saved successfully!");
+    }
+}
+
+function saveBtnHandler() {
+    var h = document.getElementById('host-input').value;
+    if (h) {
+        saveHost(h, function(b, msg) {
+            if (b) {
+                document.getElementById('host-table').innerHTML = "";
+                show(hosts);
+                hideAddForm();
+            }
+            alert(msg);
+        });
+    } else {
+        console.log('不能为空');
+    }
+}
+
+function show(item) {
+    if (Array.isArray(item)) {
+        item.forEach(function(v, i) {
+            console.log(v, i);
+            show(v);
+        });
+        return;
+    }
+    var tr = document.createElement('tr'),
+        td1 = document.createElement('td'),
+        td2 = document.createElement('td'),
+        td3 = document.createElement('td'),
+        span = document.createElement('span'),
+        btn1 = document.createElement('button');
+        btn2 = document.createElement('button');
+
+    btn1.innerHTML = "Modify";
+    btn2.innerHTML = "Delete";
+    td1.appendChild(span);
+    td1.appendChild(span);
+    td2.appendChild(btn1);
+    td2.appendChild(btn2);
+    span.innerText = item;
+    btn1.className = "btn btn-mini btn-primary";
+    btn2.className = "btn btn-mini btn-danger";
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    document.getElementById('host-table').appendChild(tr);
+}
+
+var str = localStorage['hosts'];
+if (str) {
+    var hosts = JSON.parse(str);
     show(hosts);
+} else {
+    console.log('none hosts');
+}
+
 </script>
 </html>
