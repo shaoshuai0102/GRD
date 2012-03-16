@@ -1,29 +1,36 @@
 <script>
-    chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
-        var arr = [
-            'renren.com',
-            'douban.com',
-            't.qq.com',
-            'weibo.com',
-            'taobao.com',
-            'vancl.com',
-            '360buy.com',
-            'amazon.cn',
-            'twitter.com',
-            'qzone.qq.com'
-        ];
-        var url = details.url,
-            tabId = details.tabId;
+chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
+
+    var arr = [
+        'renren.com',
+        'douban.com',
+        't.qq.com',
+        'weibo.com',
+        'taobao.com',
+        'vancl.com',
+        '360buy.com',
+        'amazon.cn',
+        'twitter.com',
+        'qzone.qq.com',
+        'facebook.com'
+    ];
+    var url = details.url,
+        tabId = details.tabId;
+
+    chrome.tabs.get(tabId, function(tab) {
+        if (!tab) return;
 
         arr.forEach(function(host, i) {
-            var h = (new Date()).getHours();
+            var h = (new Date()).getHours(),
+                curUrl = tab.url;
             //9:00 - 12:00 and 13:00 - 18:00
             if ((h >= 9 && h < 12) || (h >= 13 && h < 18)) {
-                if (url.indexOf(host) > -1) {
+                if (curUrl.indexOf(host) > -1) {
                     chrome.tabs.update(tabId, {url:'warn.html'});
                 }
             }
         });
     });
+});
 
 </script>
