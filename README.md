@@ -25,6 +25,11 @@ Install it online with [Chrome Web Store](https://chrome.google.com/webstore/det
 CHANGELOG
 =========
 
+v1.2
+----
+
+*   解决了issue #1：https://github.com/shaoshuai0102/GRD/issues/1
+
 20120314
 --------
 
